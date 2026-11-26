@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="760" viewBox="0 0 1440 760" role="img" aria-labelledby="title description">
+  <title id="title">Detailed Terraform security module resource flow</title>
+  <desc id="description">Shows the VPC input and both security group resources, their ingress and egress rules, resource attachments, and output IDs.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth"><path d="M1 1 L11 6 L1 11 Z" fill="#334155"/></marker>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif;fill:#172033}.title{font-size:30px;font-weight:700}.subtitle{font-size:16px;fill:#52627a}.head{font-size:19px;font-weight:700}.res{font-size:12px;fill:#52627a}.body{font-size:14px}.small{font-size:12px;fill:#52627a}.line{fill:none;stroke:#334155;stroke-width:2.7;marker-end:url(#arrow)}.pill{fill:#fff;stroke:#cbd5e1;stroke-width:1.4}.pilltext{font-size:12px;fill:#52627a}
+    </style>
+  </defs>
+  <rect width="1440" height="760" fill="#f6f8fb"/>
+  <text class="title" x="720" y="50" text-anchor="middle">Security module — resource deployment flow</text>
+  <text class="subtitle" x="720" y="80" text-anchor="middle">The VPC hosts both groups; EC2 web traffic is accepted only when it comes from the ALB security group.</text>
+
+  <path class="line" d="M275 345 H355 V280 H405"/>
+  <path class="line" d="M275 400 H355 V540 H405"/>
+  <path class="line" d="M735 280 H850"/>
+  <path class="line" d="M735 540 H850"/>
+  <path class="line" d="M570 400 V445"/>
+  <path class="line" d="M735 280 H790 V655 H1130"/>
+  <path class="line" d="M735 540 H795 V680 H1130"/>
+
+  <g>
+    <rect x="45" y="300" width="230" height="155" rx="16" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <circle cx="160" cy="337" r="19" fill="#bfdbfe" stroke="#3b82f6"/>
+    <text x="160" y="342" text-anchor="middle" font-size="11" font-weight="700" fill="#1d4ed8">VPC</text>
+    <text class="head" x="160" y="380" text-anchor="middle">Module input</text>
+    <text class="res" x="160" y="402" text-anchor="middle">vpc_id</text>
+    <text class="body" x="68" y="432">Shared VPC + name_prefix</text>
+  </g>
+
+  <g>
+    <rect x="405" y="160" width="330" height="240" rx="16" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+    <circle cx="570" cy="198" r="19" fill="#bbf7d0" stroke="#16a34a"/>
+    <path d="M559 198 H581 M570 187 V209" stroke="#15803d" stroke-width="2"/>
+    <text class="head" x="570" y="240" text-anchor="middle">ALB security group</text>
+    <text class="res" x="570" y="261" text-anchor="middle">aws_security_group.alb</text>
+    <text class="body" x="432" y="300">IN TCP 80 from 0.0.0.0/0</text>
+    <text class="body" x="432" y="330">IN TCP 443 from 0.0.0.0/0</text>
+    <text class="body" x="432" y="360">OUT all protocols to 0.0.0.0/0</text>
+    <text class="small" x="432" y="386">Allows public HTTP/HTTPS ingress</text>
+  </g>
+
+  <g>
+    <rect x="405" y="445" width="330" height="225" rx="16" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+    <circle cx="570" cy="483" r="19" fill="#e9d5ff" stroke="#8b5cf6"/>
+    <path d="M570 470 L581 474 V482 C581 489 576 494 570 497 C564 494 559 489 559 482 V474 Z" fill="none" stroke="#7c3aed" stroke-width="1.7"/>
+    <text class="head" x="570" y="525" text-anchor="middle">EC2 security group</text>
+    <text class="res" x="570" y="546" text-anchor="middle">aws_security_group.ec2</text>
+    <text class="body" x="432" y="585">IN TCP 80 from ALB SG only</text>
+    <text class="body" x="432" y="615">OUT all protocols to 0.0.0.0/0</text>
+    <text class="small" x="432" y="647">Allows web traffic + outbound downloads</text>
+  </g>
+
+  <g>
+    <rect x="850" y="160" width="220" height="240" rx="16" fill="#eff6ff" stroke="#60a5fa" stroke-width="2"/>
+    <text class="head" x="960" y="203" text-anchor="middle">Application</text>
+    <text class="head" x="960" y="228" text-anchor="middle">Load Balancer</text>
+    <text class="res" x="960" y="250" text-anchor="middle">compute module</text>
+    <circle cx="960" cy="310" r="30" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <text x="960" y="315" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8">ALB</text>
+    <text class="small" x="960" y="367" text-anchor="middle">Attached to ALB SG</text>
+  </g>
+  <g>
+    <rect x="850" y="445" width="220" height="225" rx="16" fill="#fff1db" stroke="#f59e0b" stroke-width="2"/>
+    <text class="head" x="960" y="490" text-anchor="middle">Private EC2</text>
+    <text class="head" x="960" y="515" text-anchor="middle">Auto Scaling fleet</text>
+    <text class="res" x="960" y="538" text-anchor="middle">compute module</text>
+    <rect x="938" y="558" width="44" height="38" rx="5" fill="#fde68a" stroke="#d97706" stroke-width="2"/>
+    <text class="small" x="960" y="625" text-anchor="middle">Attached to EC2 SG</text>
+    <text class="small" x="960" y="647" text-anchor="middle">No public inbound rule</text>
+  </g>
+
+  <g>
+    <rect x="1130" y="285" width="265" height="310" rx="16" fill="#cffafe" stroke="#0891b2" stroke-width="2"/>
+    <circle cx="1262" cy="324" r="19" fill="#a5f3fc" stroke="#0891b2"/>
+    <path d="M1253 324 H1271 M1265 318 L1271 324 L1265 330" fill="none" stroke="#0e7490" stroke-width="1.8"/>
+    <text class="head" x="1262" y="367" text-anchor="middle">Module outputs</text>
+    <text class="res" x="1262" y="389" text-anchor="middle">outputs.tf</text>
+    <text class="body" x="1157" y="435">alb_security_group_id</text>
+    <text class="small" x="1157" y="458">Attached to the ALB</text>
+    <text class="body" x="1157" y="505">ec2_security_group_id</text>
+    <text class="small" x="1157" y="528">Attached to the launch template</text>
+    <text class="small" x="1157" y="568">Both IDs are passed to compute</text>
+  </g>
+
+  <g>
+    <rect class="pill" x="754" y="245" width="86" height="25" rx="12"/><text class="pilltext" x="797" y="262" text-anchor="middle">attach group</text>
+    <rect class="pill" x="590" y="408" width="124" height="25" rx="12"/><text class="pilltext" x="652" y="425" text-anchor="middle">ALB SG source rule</text>
+    <rect class="pill" x="1078" y="620" width="51" height="25" rx="12"/><text class="pilltext" x="1103" y="637" text-anchor="middle">SG IDs</text>
+  </g>
+  <text class="small" x="45" y="720">Security groups are stateful. The EC2 egress rule permits outbound package downloads through the network module's NAT route.</text>
+</svg>

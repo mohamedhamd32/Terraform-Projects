@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="850" viewBox="0 0 1440 850" role="img" aria-labelledby="title description">
+  <title id="title">Terraform Auto Scaling module deployment flow</title>
+  <desc id="description">Root Terraform configuration deploys network, security, and compute modules. The network and security outputs feed the compute module, which provides deployment outputs.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M1 1 L11 6 L1 11 Z" fill="#334155"/>
+    </marker>
+    <style>
+      text { font-family: Arial, Helvetica, sans-serif; fill: #172033; }
+      .title { font-size: 30px; font-weight: 700; }
+      .subtitle { font-size: 16px; fill: #52627a; }
+      .card-title { font-size: 20px; font-weight: 700; }
+      .card-subtitle { font-size: 14px; fill: #52627a; }
+      .body { font-size: 14px; }
+      .small { font-size: 12px; fill: #52627a; }
+      .line { fill: none; stroke: #334155; stroke-width: 3; marker-end: url(#arrow); }
+      .pill { fill: #fff; stroke: #cbd5e1; stroke-width: 1.5; }
+      .pill-text { font-size: 13px; fill: #52627a; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="850" fill="#f6f8fb"/>
+
+  <text class="title" x="720" y="50" text-anchor="middle">Terraform deployment — Auto Scaling modules</text>
+  <text class="subtitle" x="720" y="80" text-anchor="middle">Terraform follows the module dependencies and passes resource IDs between modules.</text>
+
+  <path class="line" d="M165 320 V125 H952 V285"/>
+  <path class="line" d="M285 350 H333 V250 H385"/>
+  <path class="line" d="M285 475 H333 V590 H385"/>
+  <path class="line" d="M522 380 V500"/>
+  <path class="line" d="M660 260 H730 V355 H800"/>
+  <path class="line" d="M660 590 H730 V510 H800"/>
+  <path class="line" d="M1105 432 H1200"/>
+
+  <g>
+    <rect class="pill" x="690" y="94" width="145" height="28" rx="14"/>
+    <text class="pill-text" x="762" y="113" text-anchor="middle">compute settings</text>
+  </g>
+  <g>
+    <rect class="pill" x="288" y="284" width="126" height="28" rx="14"/>
+    <text class="pill-text" x="351" y="303" text-anchor="middle">module inputs</text>
+  </g>
+  <g>
+    <rect class="pill" x="288" y="520" width="126" height="28" rx="14"/>
+    <text class="pill-text" x="351" y="539" text-anchor="middle">module inputs</text>
+  </g>
+  <g>
+    <rect class="pill" x="533" y="421" width="111" height="28" rx="14"/>
+    <text class="pill-text" x="588" y="440" text-anchor="middle">VPC ID</text>
+  </g>
+  <g>
+    <rect class="pill" x="669" y="286" width="121" height="28" rx="14"/>
+    <text class="pill-text" x="729" y="305" text-anchor="middle">VPC + subnets</text>
+  </g>
+  <g>
+    <rect class="pill" x="666" y="545" width="140" height="28" rx="14"/>
+    <text class="pill-text" x="736" y="564" text-anchor="middle">security group IDs</text>
+  </g>
+  <g>
+    <rect class="pill" x="1110" y="389" width="83" height="28" rx="14"/>
+    <text class="pill-text" x="1151" y="408" text-anchor="middle">outputs</text>
+  </g>
+
+  <g>
+    <rect x="45" y="320" width="240" height="205" rx="16" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+    <circle cx="165" cy="358" r="19" fill="#bbf7d0" stroke="#16a34a" stroke-width="1.5"/>
+    <text x="165" y="363" text-anchor="middle" font-size="13" font-weight="700" fill="#166534">TF</text>
+    <text class="card-title" x="165" y="405" text-anchor="middle">Root configuration</text>
+    <text class="card-subtitle" x="165" y="428" text-anchor="middle">root module</text>
+    <text class="body" x="70" y="462">• Reads variables and AWS region</text>
+    <text class="body" x="70" y="486">• Calls the three child modules</text>
+    <text class="body" x="70" y="510">• Coordinates resource dependencies</text>
+  </g>
+
+  <g>
+    <rect x="385" y="155" width="275" height="225" rx="16" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <circle cx="522" cy="195" r="20" fill="#bfdbfe" stroke="#3b82f6" stroke-width="1.5"/>
+    <circle cx="522" cy="195" r="11" fill="none" stroke="#2563eb" stroke-width="1.5"/>
+    <path d="M511 195 H533 M522 184 C516 190 516 200 522 206 M522 184 C528 190 528 200 522 206" fill="none" stroke="#2563eb" stroke-width="1.3"/>
+    <text class="card-title" x="522" y="239" text-anchor="middle">Network module</text>
+    <text class="card-subtitle" x="522" y="261" text-anchor="middle">modules/network</text>
+    <text class="body" x="410" y="296">• VPC and 3 public/private subnet pairs</text>
+    <text class="body" x="410" y="321">• Internet Gateway and NAT Gateway</text>
+    <text class="body" x="410" y="346">• Route tables and subnet associations</text>
+    <text class="small" x="410" y="368">Purpose: network foundation for the lab</text>
+  </g>
+
+  <g>
+    <rect x="385" y="500" width="275" height="180" rx="16" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+    <circle cx="522" cy="540" r="20" fill="#e9d5ff" stroke="#8b5cf6" stroke-width="1.5"/>
+    <path d="M522 527 L533 531 V539 C533 546 528 551 522 554 C516 551 511 546 511 539 V531 Z" fill="none" stroke="#7c3aed" stroke-width="1.7"/>
+    <text class="card-title" x="522" y="584" text-anchor="middle">Security module</text>
+    <text class="card-subtitle" x="522" y="606" text-anchor="middle">modules/security</text>
+    <text class="body" x="410" y="635">• ALB accepts public HTTP/HTTPS</text>
+    <text class="body" x="410" y="659">• EC2 HTTP ingress only from the ALB</text>
+  </g>
+
+  <g>
+    <rect x="800" y="285" width="305" height="295" rx="16" fill="#fff1db" stroke="#f59e0b" stroke-width="2"/>
+    <circle cx="952" cy="326" r="20" fill="#fde68a" stroke="#f59e0b" stroke-width="1.5"/>
+    <rect x="942" y="317" width="20" height="7" rx="2" fill="none" stroke="#b45309" stroke-width="1.5"/>
+    <rect x="942" y="328" width="20" height="7" rx="2" fill="none" stroke="#b45309" stroke-width="1.5"/>
+    <circle cx="946" cy="320.5" r="1" fill="#b45309"/>
+    <circle cx="946" cy="331.5" r="1" fill="#b45309"/>
+    <text class="card-title" x="952" y="370" text-anchor="middle">Compute module</text>
+    <text class="card-subtitle" x="952" y="393" text-anchor="middle">modules/compute</text>
+    <text class="body" x="826" y="430">• Public ALB, target group and listener</text>
+    <text class="body" x="826" y="455">• Launch template installs and runs Nginx</text>
+    <text class="body" x="826" y="480">• Auto Scaling Group in private subnets</text>
+    <text class="body" x="826" y="505">• CloudWatch CPU alarms and scale policies</text>
+    <text class="body" x="826" y="530">• SNS topic and optional email subscription</text>
+    <text class="small" x="826" y="558">Purpose: serves traffic and scales capacity</text>
+  </g>
+
+  <g>
+    <rect x="1200" y="345" width="195" height="180" rx="16" fill="#fef3c7" stroke="#eab308" stroke-width="2"/>
+    <circle cx="1297" cy="383" r="19" fill="#fde68a" stroke="#ca8a04" stroke-width="1.5"/>
+    <path d="M1289 383 H1305 M1299 377 L1305 383 L1299 389" fill="none" stroke="#854d0e" stroke-width="1.8"/>
+    <text class="card-title" x="1297" y="425" text-anchor="middle">Root outputs</text>
+    <text class="card-subtitle" x="1297" y="447" text-anchor="middle">deployment results</text>
+    <text class="body" x="1220" y="477">• Application URL</text>
+    <text class="body" x="1220" y="500">• ASG and alarm names</text>
+    <text class="body" x="1220" y="523">• VPC and subnet IDs</text>
+  </g>
+
+  <g>
+    <rect x="45" y="735" width="1350" height="62" rx="12" fill="#fff" stroke="#d7dee8" stroke-width="1.5"/>
+    <text x="70" y="761" font-size="13" font-weight="700" fill="#334155">How to read this chart</text>
+    <path d="M70 779 H125" class="line"/>
+    <text class="small" x="140" y="783">Solid arrows show module calls or required output hand-offs.</text>
+    <rect x="610" y="752" width="16" height="16" rx="4" fill="#dbeafe" stroke="#3b82f6"/>
+    <text class="small" x="634" y="765">network</text>
+    <rect x="715" y="752" width="16" height="16" rx="4" fill="#f3e8ff" stroke="#8b5cf6"/>
+    <text class="small" x="739" y="765">security</text>
+    <rect x="825" y="752" width="16" height="16" rx="4" fill="#fff1db" stroke="#f59e0b"/>
+    <text class="small" x="849" y="765">compute</text>
+    <text class="small" x="985" y="765">Terraform can create independent resources concurrently.</text>
+  </g>
+</svg>

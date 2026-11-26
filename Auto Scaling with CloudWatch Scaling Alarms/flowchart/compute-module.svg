@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="1080" viewBox="0 0 1700 1080" role="img" aria-labelledby="title description">
+  <title id="title">Detailed Terraform compute module resource flow</title>
+  <desc id="description">Shows every compute module resource: load balancer, target group, listener, launch template, Auto Scaling Group, scaling policies, CloudWatch alarms, SNS topic, optional email subscription, and outputs.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth"><path d="M1 1 L11 6 L1 11 Z" fill="#334155"/></marker>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif;fill:#172033}.title{font-size:30px;font-weight:700}.subtitle{font-size:16px;fill:#52627a}.head{font-size:17px;font-weight:700}.res{font-size:11px;fill:#52627a}.body{font-size:12px}.small{font-size:11px;fill:#52627a}.line{fill:none;stroke:#334155;stroke-width:2.5;marker-end:url(#arrow)}.pill{fill:#fff;stroke:#cbd5e1;stroke-width:1.3}.pilltext{font-size:11px;fill:#52627a}
+    </style>
+  </defs>
+  <rect width="1700" height="1080" fill="#f6f8fb"/>
+  <text class="title" x="850" y="48" text-anchor="middle">Compute module — resource deployment flow</text>
+  <text class="subtitle" x="850" y="78" text-anchor="middle">Traffic is balanced across private EC2 targets; CPU alarms invoke scaling policies and publish SNS notifications.</text>
+
+  <path class="line" d="M260 270 H330 V180 H390"/>
+  <path class="line" d="M260 330 H330 V365 H390"/>
+  <path class="line" d="M260 390 H330 V550 H390"/>
+  <path class="line" d="M260 450 H330 V740 H390"/>
+  <path class="line" d="M590 180 H700"/>
+  <path class="line" d="M590 365 H700 V235"/>
+  <path class="line" d="M900 235 H1010"/>
+  <path class="line" d="M590 550 H700 V590 H1010"/>
+  <path class="line" d="M590 365 H760 V590 H1010"/>
+  <path class="line" d="M900 590 H1010"/>
+  <path class="line" d="M1180 180 H1300"/>
+  <path class="line" d="M1180 590 H1300 V405"/>
+  <path class="line" d="M1180 590 H1240 V700 H1300"/>
+  <path class="line" d="M1180 590 H1240 V875 H1300"/>
+  <path class="line" d="M1180 180 H1235 V875 H1300"/>
+  <path class="line" d="M1180 180 H1260 V875 H1300"/>
+  <path class="line" d="M1180 180 H1275 V875 H1300"/>
+  <path class="line" d="M1180 180 H1250 V700 H1300"/>
+  <path class="line" d="M1470 405 H1515 V520 H1300"/>
+  <path class="line" d="M1470 700 H1515 V875 H1300"/>
+  <path class="line" d="M1470 875 H1535 V1010"/>
+  <path class="line" d="M1470 1010 H1535"/>
+  <path class="line" d="M1470 180 H1535 V1010"/>
+  <path class="line" d="M1470 590 H1535 V1010"/>
+  <path class="line" d="M1655 535 V1010"/>
+  <path class="line" d="M1470 875 H1500 V180 H1300"/>
+
+  <g>
+    <rect x="40" y="220" width="220" height="300" rx="16" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+    <circle cx="150" cy="258" r="19" fill="#e9d5ff" stroke="#8b5cf6"/><text x="150" y="263" text-anchor="middle" font-size="12" font-weight="700" fill="#6d28d9">IN</text>
+    <text class="head" x="150" y="300" text-anchor="middle">Module inputs</text>
+    <text class="small" x="62" y="332">Network:</text><text class="body" x="62" y="354">VPC + public/private subnet IDs</text>
+    <text class="small" x="62" y="385">Security:</text><text class="body" x="62" y="407">ALB + EC2 security group IDs</text>
+    <text class="small" x="62" y="438">Deployment settings:</text><text class="body" x="62" y="460">AMI, instance type, ASG sizes</text>
+    <text class="body" x="62" y="484">name prefix, notification email</text>
+    <text class="small" x="62" y="508">user_data.sh installs Nginx</text>
+  </g>
+
+  <g>
+    <rect x="390" y="130" width="200" height="100" rx="14" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <text class="head" x="490" y="162" text-anchor="middle">Application LB</text><text class="res" x="490" y="182" text-anchor="middle">aws_lb.this</text>
+    <text class="body" x="410" y="210">Public subnets + ALB SG</text>
+  </g>
+  <g>
+    <rect x="390" y="315" width="200" height="100" rx="14" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <text class="head" x="490" y="347" text-anchor="middle">Web target group</text><text class="res" x="490" y="367" text-anchor="middle">aws_lb_target_group.web</text>
+    <text class="body" x="410" y="395">HTTP :80; / health check</text>
+  </g>
+  <g>
+    <rect x="700" y="185" width="200" height="100" rx="14" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <text class="head" x="800" y="217" text-anchor="middle">HTTP listener</text><text class="res" x="800" y="237" text-anchor="middle">aws_lb_listener.http</text>
+    <text class="body" x="720" y="265">Port 80 forwards to target group</text>
+  </g>
+  <g>
+    <rect x="390" y="500" width="200" height="100" rx="14" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+    <text class="head" x="490" y="532" text-anchor="middle">Launch template</text><text class="res" x="490" y="552" text-anchor="middle">aws_launch_template.web</text>
+    <text class="body" x="410" y="580">AMI, instance type, EC2 SG</text>
+  </g>
+  <g>
+    <rect x="390" y="690" width="200" height="100" rx="14" fill="#fef3c7" stroke="#eab308" stroke-width="2"/>
+    <text class="head" x="490" y="722" text-anchor="middle">SNS topic</text><text class="res" x="490" y="742" text-anchor="middle">aws_sns_topic.alarms</text>
+    <text class="body" x="410" y="770">Alarm notification destination</text>
+  </g>
+  <g>
+    <rect x="1010" y="130" width="170" height="100" rx="14" fill="#fef3c7" stroke="#eab308" stroke-width="2"/>
+    <text class="head" x="1095" y="162" text-anchor="middle">Email subscription</text><text class="res" x="1095" y="182" text-anchor="middle">aws_sns_topic_subscription.email</text>
+    <text class="body" x="1030" y="210">Optional; recipient confirms</text>
+  </g>
+  <g>
+    <rect x="1010" y="540" width="170" height="100" rx="14" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+    <text class="head" x="1095" y="572" text-anchor="middle">Auto Scaling Group</text><text class="res" x="1095" y="592" text-anchor="middle">aws_autoscaling_group.web</text>
+    <text class="body" x="1030" y="620">Private subnets + target group</text>
+  </g>
+  <g>
+    <rect x="1300" y="350" width="170" height="110" rx="14" fill="#ffedd5" stroke="#ea580c" stroke-width="2"/>
+    <text class="head" x="1385" y="382" text-anchor="middle">Scale-out policy</text><text class="res" x="1385" y="402" text-anchor="middle">aws_autoscaling_policy.scale_out</text>
+    <text class="body" x="1320" y="430">Add 1; 300s cooldown</text>
+  </g>
+  <g>
+    <rect x="1300" y="645" width="170" height="110" rx="14" fill="#ffedd5" stroke="#ea580c" stroke-width="2"/>
+    <text class="head" x="1385" y="677" text-anchor="middle">Scale-in policy</text><text class="res" x="1385" y="697" text-anchor="middle">aws_autoscaling_policy.scale_in</text>
+    <text class="body" x="1320" y="725">Remove 1; 300s cooldown</text>
+  </g>
+  <g>
+    <rect x="1300" y="820" width="170" height="110" rx="14" fill="#fce7f3" stroke="#db2777" stroke-width="2"/>
+    <text class="head" x="1385" y="852" text-anchor="middle">High CPU alarm</text><text class="res" x="1385" y="872" text-anchor="middle">aws_cloudwatch_metric_alarm.scale_out</text>
+    <text class="body" x="1320" y="900">Average CPU ≥ 70%; 2 × 120s</text>
+    <text class="small" x="1320" y="920">Actions: scale out + SNS</text>
+  </g>
+  <g>
+    <rect x="1300" y="955" width="170" height="110" rx="14" fill="#fce7f3" stroke="#db2777" stroke-width="2"/>
+    <text class="head" x="1385" y="987" text-anchor="middle">Low CPU alarm</text><text class="res" x="1385" y="1007" text-anchor="middle">aws_cloudwatch_metric_alarm.scale_in</text>
+    <text class="body" x="1320" y="1035">Average CPU ≤ 40%; 2 × 120s</text>
+    <text class="small" x="1320" y="1055">Actions: scale in + SNS</text>
+  </g>
+  <g>
+    <rect x="1535" y="470" width="145" height="290" rx="15" fill="#cffafe" stroke="#0891b2" stroke-width="2"/>
+    <text class="head" x="1607" y="508" text-anchor="middle">Module outputs</text>
+    <text class="res" x="1607" y="530" text-anchor="middle">outputs.tf</text>
+    <text class="body" x="1555" y="575">ALB DNS name</text>
+    <text class="body" x="1555" y="610">Auto Scaling Group</text>
+    <text class="body" x="1555" y="635">name</text>
+    <text class="body" x="1555" y="675">High/low alarm names</text>
+    <text class="body" x="1555" y="710">SNS topic ARN</text>
+    <text class="small" x="1555" y="742">Returned to root module</text>
+  </g>
+
+  <g>
+    <rect class="pill" x="606" y="143" width="83" height="24" rx="12"/><text class="pilltext" x="647" y="160" text-anchor="middle">ALB ARN</text>
+    <rect class="pill" x="606" y="310" width="83" height="24" rx="12"/><text class="pilltext" x="647" y="327" text-anchor="middle">target ARN</text>
+    <rect class="pill" x="906" y="548" width="95" height="24" rx="12"/><text class="pilltext" x="953" y="565" text-anchor="middle">launch + target</text>
+    <rect class="pill" x="1187" y="302" width="105" height="24" rx="12"/><text class="pilltext" x="1239" y="319" text-anchor="middle">ASG reference</text>
+    <rect class="pill" x="1178" y="793" width="115" height="24" rx="12"/><text class="pilltext" x="1235" y="810" text-anchor="middle">ASG + policy + SNS</text>
+  </g>
+  <text class="small" x="40" y="1017">The ASG is explicitly ordered after the HTTP listener. Its ELB health checks and target-group attachment keep registered web capacity healthy.</text>
+  <text class="small" x="40" y="1042">Scaling alarms use the ASG's average EC2 CPU metric. Each alarm invokes its matching policy and publishes to the SNS topic.</text>
+</svg>
