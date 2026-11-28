@@ -1,0 +1,37 @@
+# Copy to terraform.tfvars and adjust:
+#   cp terraform.tfvars.example terraform.tfvars
+
+region             = "us-east-1"
+cluster_name       = "practice-eks"
+kubernetes_version = "1.37"
+
+vpc_cidr = "10.0.0.0/16"
+az_count = 2 # 2 or 3
+
+# Restrict API access to your own public IP for better security, e.g. ["203.0.113.10/32"]
+endpoint_public_access_cidrs = ["0.0.0.0/0"]
+
+# Worker nodes
+node_instance_types = ["t3.medium"]
+node_capacity_type  = "ON_DEMAND" # or "SPOT" (cheaper, can be interrupted)
+node_disk_size      = 20
+node_desired_size   = 2
+node_min_size       = 1
+node_max_size       = 2
+
+tags = {
+  env = "lab"
+}
+
+# Grant other IAM users/roles access to the cluster (optional)
+# access_entries = {
+#   john = {
+#     principal_arn = "arn:aws:iam::111122223333:user/john"
+#     policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSEditPolicy"
+#     namespaces    = ["dev"]
+#   }
+#   admin-role = {
+#     principal_arn = "arn:aws:iam::111122223333:role/eks-admins" 
+#     policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+#   }
+# }
