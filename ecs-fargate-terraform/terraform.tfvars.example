@@ -1,0 +1,15 @@
+# Copy this file to terraform.tfvars and adjust the values.
+
+aws_region  = "eu-central-1"
+project     = "demo-api"
+environment = "dev"
+
+# Tag of the image you pushed to ECR (see scripts/push-image.sh)
+image_tag = "v1"
+
+# Restrict access to your own public IP while practising, for example ["203.0.113.10/32"]
+allowed_cidr_blocks = ["0.0.0.0/0"]
+
+desired_count = 2
+min_capacity  = 2
+max_capacity  = 6
